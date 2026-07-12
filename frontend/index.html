@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Auric Monitor 黄金白银宏观监测</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">&#9670; <span>Auric</span> Monitor</div>
+      <div class="update-badge" id="updateBadge"><span class="dot dot-ok"></span>加载中...</div>
+    </div>
+    <div class="header-right">
+      <button class="btn" onclick="refreshData()">&#x21bb; 刷新</button>
+      <button class="btn" onclick="resetParams()" title="恢复默认判断参数">&#x21BA; 重置参数</button>
+    </div>
+  </header>
+
+  <div class="price-strip" id="priceStrip">
+    <div class="price-card gold"><div class="skeleton">加载中...</div></div>
+    <div class="price-card silver"><div class="skeleton">加载中...</div></div>
+  </div>
+
+  <div class="macro-chain" id="macroChain"></div>
+
+  <div class="tabs">
+    <button class="tab-btn gold active" data-tab="gold" onclick="switchTab('gold')">&#9670; 黄金</button>
+    <button class="tab-btn silver" data-tab="silver" onclick="switchTab('silver')">&#9670; 白银</button>
+  </div>
+
+  <div id="tabContent-gold" class="tab-panel active"><div class="skeleton-wide">加载黄金数据...</div></div>
+  <div id="tabContent-silver" class="tab-panel"><div class="skeleton-wide">加载白银数据...</div></div>
+
+  <div class="summary-section" id="summarySection"></div>
+
+  <footer class="footer">
+    <div class="data-sources">数据来源: Yahoo Finance | Firecrawl | 各官方机构</div>
+    <div class="disclaimer">仅展示客观数据，不构成投资建议</div>
+  </footer>
+</div>
+<script src="app.js?v=4"></script>
+</body>
+</html>
