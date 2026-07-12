@@ -64,7 +64,7 @@ function renderTab(tabs, d){
         var sc=scMap[imp]||"neutral"
         var conc=iv.conclusion||"";if(conc==""||conc.includes("暂无")||conc.includes("待")||(conc&&!/[\u4e00-\u9fff]/.test(conc))){var at=(d&&d.analysis_texts?d.analysis_texts[ik]:"");if(at){conc=at}}
         var src=iv.source?' <a href="'+iv.source+'" target="_blank" class="ind-source" title="查看数据来源">↳</a>':""
-        var thres=iv.threshold||""
+        var thres=(modifiedParams[ik]||iv.threshold)||""
         var interp=iv.interpretation||""
         var freq=iv.frequency||""
         h+='<div class="indicator"><div class="ind-row">'
@@ -75,7 +75,7 @@ function renderTab(tabs, d){
         h+='<span class="ind-toggle" onclick="toggleMeta(this)" title="展开详情">▼</span></div>'
         // Metadata panel
         h+='<div class="ind-meta">'
-        if(thres)h+='<div><span class="meta-label">阈值: </span><span class="meta-val">'+thres+'</span></div>'
+        if(thres)h+='<div><span class="meta-label">阈值: </span><span class="meta-val">'+thres+'</span><span class="ind-edit" onclick="editRule(''+ik+'')" title="修改参数">✎</span></div>'
         if(interp)h+='<div><span class="meta-label">解读: </span><span class="meta-bull">'+interp+'</span></div>'
         if(freq)h+='<div><span class="meta-label">监测频率: </span><span class="meta-val">'+freq+'</span></div>'
         var at=(d&&d.analysis_texts?d.analysis_texts[ik]:'')||iv.conclusion||'';if(at)h+='<div><span class="meta-label">系统分析: </span><span class="meta-val">'+at+'</span></div>'
