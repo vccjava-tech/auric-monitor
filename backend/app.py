@@ -1,13 +1,17 @@
-"""Flask server for Gold-Silver Macro Monitor."""
+﻿import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from flask import Flask, jsonify, send_from_directory
 from data_sources import fetch_all
-import os, sys
 
-app = Flask(__name__, static_folder="../frontend", static_url_path="")
+# Base path for frontend files
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+
+app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
 
 @app.route("/")
 def index():
-    return send_from_directory("../frontend", "index.html")
+    return send_from_directory(FRONTEND_DIR, "index.html")
 
 @app.route("/api/data")
 def api_data():
@@ -17,7 +21,5 @@ def api_data():
         return jsonify({"error": str(e)})
 
 if __name__ == "__main__":
-    port = int(os.getenv("FLASK_PORT", "5100"))
-    debug = os.getenv("FLASK_DEBUG", "false").lower() == "true"
-    print(f"Auric Monitor: http://127.0.0.1:{port}")
-    app.run(host="0.0.0.0", port=port, debug=debug)
+    port = int(os.getenv("PORT", os.getenv("FLASK_PORT", "5100")))
+    app.run(host="0.0.0.0", port=port, debug=False)
