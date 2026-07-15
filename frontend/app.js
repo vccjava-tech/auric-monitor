@@ -26,10 +26,14 @@ function renderPrices(d){
     var res=k==="gold"?d.gold_resistance:d.silver_resistance
     var ext=""
     if(k==="gold"){
+      var gld=d.prices.gld_holdings
       ext='<div class="price-domestic">国内金价: <span>¥'+p.domestic_gold+'/g</span></div>'
+      if(gld&&gld.tons)ext+='<div class="price-ext">GLD持仓: <span>'+gld.tons+'吨</span></div>'
       if(p.shfe_gold)ext+='<div class="price-ext">沪金主力: <span>¥'+p.shfe_gold.price+'/g</span></div>'
     }else{
-      if(p.shfe_silver)ext='<div class="price-ext">沪银主力: <span>¥'+p.shfe_silver.price+'/吨</span></div>'
+      var slv=d.prices.slv_holdings
+      if(slv&&slv.tons)ext='<div class="price-ext">SLV持仓: <span>'+slv.tons+'吨</span></div>'
+      if(p.shfe_silver)ext+='<div class="price-ext">沪银主力: <span>¥'+p.shfe_silver.price+'/吨</span></div>'
     }
     return '<div class="price-card '+k+'"><div class="price-info"><div class="price-label">'+lb+'</div><div class="price-row"><div class="price-value">$'+px.price+'</div><div class="price-change '+cl+'">'+sg+px.change_pct.toFixed(2)+'%</div></div>'+ext+'</div><div class="price-meta">支撑 $'+sup+'<br>阻力 $'+res+'<br>金银比 '+r+'</div></div>'
   }).join("")
@@ -56,13 +60,20 @@ function renderTab(tabs, d){
       indKeys.forEach(function(ik){
         var iv=dim.indicators[ik]
         if(!iv||!iv.name)return
-        var nm=iv.name;var val=iv.value||"N/A"
+                var nm=iv.name;var val=iv.value||"N/A";if(val=="暂无数据"||val=="N/A"){var at=(d&&d.analysis_texts?d.analysis_texts[ik]:"");if(at){val=at.substring(0,60)}}
+        // Replace GLD/SLV FC fallback with real ETF holdings data
+        if(ik==="gld"&&d.prices&&d.prices.gld_holdings&&d.prices.gld_holdings.tons){
+          val=d.prices.gld_holdings.tons+"吨"
+        }
+        if(ik==="slv"&&d.prices&&d.prices.slv_holdings&&d.prices.slv_holdings.tons){
+          val=d.prices.slv_holdings.tons+"吨"
+        }
         var imp=iv.impacted||"Pending"
         var stMap={Bullish:"利多",Bearish:"利空",Watch:"关注",Neutral:"中性",Pending:"待查",Reference:"参考"}
         var stLabel=stMap[imp]||imp
         var scMap={Bullish:"bullish",Bearish:"bearish",Watch:"watch",Neutral:"neutral",Pending:"pending",Reference:"reference"}
         var sc=scMap[imp]||"neutral"
-        var conc=iv.conclusion||"";if(conc==""||conc.includes("暂无")||conc.includes("待")||(conc&&!/[\u4e00-\u9fff]/.test(conc))){var at=(d&&d.analysis_texts?d.analysis_texts[ik]:"");if(at){conc=at}}
+                var conc=iv.conclusion||"";if(conc==""||conc=="暂无数据"||conc=="待更新"){var at=(d&&d.analysis_texts?d.analysis_texts[ik]:"");if(at){conc=at.substring(0,120)}}
         var src=iv.source?' <a href="'+iv.source+'" target="_blank" class="ind-source" title="查看数据来源">↳</a>':""
         var thres=iv.threshold||""
         var interp=iv.interpretation||""
