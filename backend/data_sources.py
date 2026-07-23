@@ -145,7 +145,7 @@ def fetch_futures_data():
     try:
         import requests as _rq
         _r = _rq.get("https://hq.sinajs.cn/list=hf_GC,hf_SI",
-            headers={"User-Agent": "Mozilla/5.0", "Referer": "https://finance.sina.com.cn"}, timeout=5)
+            headers={"User-Agent": "Mozilla/5.0", "Referer": "https://finance.sina.com.cn"}, timeout=3)
         for _line in _r.text.strip().splitlines():
             if "hf_GC" in _line:
                 _p = _line.split('"')[1].split(",")
@@ -156,7 +156,7 @@ def fetch_futures_data():
     except: pass
     try:
         _r = _rq.get("https://finance.yahoo.com/quote/GC=F/key-statistics",
-            headers={"User-Agent": "Mozilla/5.0"}, timeout=5)
+            headers={"User-Agent": "Mozilla/5.0"}, timeout=3)
         _m = __import__("re").search(r'openInterest[^}]*raw\\":(\d+)', _r.text)
         if _m: result["comex_gold_oi"] = int(_m.group(1))
     except: pass
@@ -192,7 +192,7 @@ def fetch_futures_data():
     except: pass
     try:
         _r = _rq.get("https://finance.yahoo.com/quote/SI=F/key-statistics",
-            headers={"User-Agent": "Mozilla/5.0"}, timeout=5)
+            headers={"User-Agent": "Mozilla/5.0"}, timeout=3)
         _m = __import__("re").search(r'openInterest[^}]*raw\\":(\d+)', _r.text)
         if _m: result["comex_silver_oi"] = int(_m.group(1))
     except: pass
@@ -206,7 +206,7 @@ def fetch_etf_holdings(ticker):
     """?Yahoo Finance??ETF??(??->?)?"""
     try:
         url = f"https://finance.yahoo.com/quote/{ticker}/key-statistics"
-        r = requests.get(url, headers=HEADERS, timeout=5)
+        r = requests.get(url, headers=HEADERS, timeout=3)
         if r.status_code != 200:
             return None
         idx = r.text.find("sharesOutstanding")
@@ -239,7 +239,7 @@ def fetch_etf_holdings(ticker):
 def fetch_all():
     if hasattr(fetch_all, "_cache") and fetch_all._cache:
         ct, cv = fetch_all._cache
-        if (datetime.now() - ct).total_seconds() < 30:
+        if (datetime.now() - ct).total_seconds() < 300:
             return cv
     _dc_fc, _dc_etf = _dc_load()
     if _dc_fc:
